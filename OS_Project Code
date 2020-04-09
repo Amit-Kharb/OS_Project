@@ -1,0 +1,58 @@
+#include<stdio.h>
+int main()
+{
+  int Count, j, n;
+  int Time, Remaining;
+  int Flag = 0, TimeQuantum = 10;
+  int WaitingTime = 0, TurnAroundTime = 0, ArrivalTime[10], BurstTime[10], RT[10];
+  
+  printf("\n OS Project\n Submitted To : Shaina Gupta\n Submitted by : Amit Kharb\n Section : K18NZ\n Roll No : 20");
+  printf("\n\n Enter the Total Number of Processes : \t");
+  scanf("%d", &n);
+  Remaining = n;
+  
+  for(Count=0; Count<n; Count++)
+  {
+    printf("Enter the Arrival Time & Burst Time for the Process Number %d : ", Count+1);
+    scanf("%d", &ArrivalTime[Count]);
+    scanf("%d", &BurstTime[Count]);
+    RT[Count] = BurstTime[Count];
+  }
+  
+  printf("\nEnter the Time Quantum : %d\t", TimeQuantum);
+  printf("\n(Taking 10 as given in the question)");
+  printf("\n\nProcess\t|Turnaround Time|Waiting Time\n\n");
+  
+  for(Time=0, Count=0; Remaining!=0;)
+  {
+    if(RT[Count] <= TimeQuantum && RT[Count]>0)
+    {
+      Time += RT[Count];
+      RT[Count] = 0;
+      Flag = 1;
+    }
+    else if(RT[Count] > 0)
+    {
+      RT[Count] -= TimeQuantum;
+      Time += TimeQuantum;
+    }
+    if(RT[Count] == 0 && Flag == 1)
+    {
+      Remaining--;
+      printf(" P[%d]\t|\t%d\t|\t%d\n", Count+1, Time-ArrivalTime[Count], Time-ArrivalTime[Count]-BurstTime[Count]);
+      WaitingTime += Time-ArrivalTime[Count]-BurstTime[Count];
+      TurnAroundTime += Time-ArrivalTime[Count];
+      Flag = 0;
+    }
+    if(Count == n-1)
+      Count = 0;
+    else if(ArrivalTime[Count+1] <= Time)
+      Count++;
+    else
+      Count = 0;
+  }
+  printf("\n\n Average Waiting Time = %f\n", WaitingTime*1.0/n);
+  printf(" Avg Turnaround Time = %f", TurnAroundTime*1.0/n);
+ 
+  return 0;
+}
